@@ -140,6 +140,15 @@ body {
   border: 1px solid var(--accent);
 }
 
+.button-row {
+  display: flex;
+  gap: 12px;
+}
+
+.button-row .btn-secondary {
+  margin-top: 0;
+}
+
 .btn-secondary.copied {
   background: var(--accent);
   color: var(--accent-text);

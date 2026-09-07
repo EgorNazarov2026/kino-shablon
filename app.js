@@ -156,6 +156,7 @@ const errorMsg = document.getElementById('error-msg');
 const resultSection = document.getElementById('result-section');
 const resultArea = document.getElementById('result-area');
 const copyBtn = document.getElementById('copy-btn');
+const shareBtn = document.getElementById('share-btn');
 
 function updateGenerateAvailability() {
   const hasValue = titleInput.value.trim().length > 0;
@@ -234,6 +235,34 @@ copyBtn.addEventListener('click', async () => {
     }, 1500);
   }
 });
+
+/* -------------------------------------------------------------------------
+   Поделиться через системный iOS Share Sheet (Web Share API).
+
+   Если navigator.share недоступен в текущем окружении, кнопка «Поделиться»
+   остаётся скрытой — пользователь всё равно может скопировать текст через
+   уже существующую кнопку «КОПИРОВАТЬ» (это и есть fallback).
+   ------------------------------------------------------------------------- */
+if (navigator.share) {
+  shareBtn.hidden = false;
+}
+
+async function shareGeneratedText() {
+  const text = resultArea.value;
+  if (!text) return;
+
+  const title = titleInput.value.trim();
+
+  try {
+    await navigator.share(title ? { title, text } : { text });
+  } catch (err) {
+    // Пользователь нажал Cancel в Share Sheet — это не ошибка, ничего не делаем.
+    if (err && err.name === 'AbortError') return;
+    // Любая другая ошибка Web Share API — тихо игнорируем, приложение не должно падать.
+  }
+}
+
+shareBtn.addEventListener('click', shareGeneratedText);
 
 /* -------------------------------------------------------------------------
    Регистрация Service Worker (для офлайн-работы PWA)
