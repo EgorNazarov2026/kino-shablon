@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <title>КИНО ШАБЛОН</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#111113" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Кино Шаблон" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="screen">
+    <header class="header">
+      <h1 class="app-title">КИНО ШАБЛОН</h1>
+    </header>
+
+    <main class="main">
+      <label class="field-label" for="title-input">Название фильма</label>
+      <input
+        id="title-input"
+        class="text-input"
+        type="text"
+        inputmode="text"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="sentences"
+        spellcheck="false"
+        placeholder="Например, Anora"
+      />
+      <p id="error-msg" class="error-msg" hidden>Введите название фильма</p>
+
+      <button id="generate-btn" class="btn btn-primary" type="button">
+        СОЗДАТЬ ШАБЛОН
+      </button>
+
+      <section id="result-section" class="result-section" hidden>
+        <label class="field-label" for="result-area">Готовый шаблон</label>
+        <textarea
+          id="result-area"
+          class="result-area"
+          spellcheck="false"
+        ></textarea>
+
+        <button id="copy-btn" class="btn btn-secondary" type="button">
+          КОПИРОВАТЬ
+        </button>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
