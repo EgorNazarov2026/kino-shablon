@@ -16,46 +16,84 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="overlay" class="overlay"></div>
+
+  <nav id="side-menu" class="side-menu" aria-hidden="true">
+    <div class="side-menu-header">Меню</div>
+    <ul class="side-menu-list">
+      <li><button class="side-menu-item" type="button" data-page="home">Дом</button></li>
+      <li><button class="side-menu-item" type="button" data-page="new">Новинки</button></li>
+      <li><button class="side-menu-item" type="button" data-page="oscar">На Оскар</button></li>
+      <li><button class="side-menu-item" type="button" data-page="classic">Классика</button></li>
+      <li><button class="side-menu-item" type="button" data-page="series">Сериалы</button></li>
+    </ul>
+  </nav>
+
   <div class="screen">
     <header class="header">
+      <button id="menu-btn" class="menu-btn" type="button" aria-label="Открыть меню">
+        <span></span><span></span><span></span>
+      </button>
       <h1 class="app-title">КИНО ШАБЛОН</h1>
     </header>
 
     <main class="main">
-      <label class="field-label" for="title-input">Название фильма</label>
-      <input
-        id="title-input"
-        class="text-input"
-        type="text"
-        inputmode="text"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="sentences"
-        spellcheck="false"
-        placeholder="Например, Anora"
-      />
-      <p id="error-msg" class="error-msg" hidden>Введите название фильма</p>
-
-      <button id="generate-btn" class="btn btn-primary" type="button">
-        СОЗДАТЬ ШАБЛОН
-      </button>
-
-      <section id="result-section" class="result-section" hidden>
-        <label class="field-label" for="result-area">Готовый шаблон</label>
-        <textarea
-          id="result-area"
-          class="result-area"
+      <section id="page-home" class="page">
+        <label class="field-label" for="title-input">Название фильма</label>
+        <input
+          id="title-input"
+          class="text-input"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="sentences"
           spellcheck="false"
-        ></textarea>
+          placeholder="Например, Anora"
+        />
+        <p id="error-msg" class="error-msg" hidden>Введите название фильма</p>
 
-        <div class="button-row">
-          <button id="copy-btn" class="btn btn-secondary" type="button">
-            КОПИРОВАТЬ
-          </button>
-          <button id="share-btn" class="btn btn-secondary" type="button" hidden>
-            ПОДЕЛИТЬСЯ
-          </button>
-        </div>
+        <button id="generate-btn" class="btn btn-primary" type="button">
+          СОЗДАТЬ ШАБЛОН
+        </button>
+
+        <section id="result-section" class="result-section" hidden>
+          <label class="field-label" for="result-area">Готовый шаблон</label>
+          <textarea
+            id="result-area"
+            class="result-area"
+            spellcheck="false"
+          ></textarea>
+
+          <div class="button-row">
+            <button id="copy-btn" class="btn btn-secondary" type="button">
+              КОПИРОВАТЬ
+            </button>
+            <button id="share-btn" class="btn btn-secondary" type="button" hidden>
+              ПОДЕЛИТЬСЯ
+            </button>
+          </div>
+        </section>
+      </section>
+
+      <section id="page-new" class="page" hidden>
+        <h2 class="page-title">Новинки</h2>
+        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
+      </section>
+
+      <section id="page-oscar" class="page" hidden>
+        <h2 class="page-title">На Оскар</h2>
+        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
+      </section>
+
+      <section id="page-classic" class="page" hidden>
+        <h2 class="page-title">Классика</h2>
+        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
+      </section>
+
+      <section id="page-series" class="page" hidden>
+        <h2 class="page-title">Сериалы</h2>
+        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
       </section>
     </main>
   </div>

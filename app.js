@@ -265,6 +265,102 @@ async function shareGeneratedText() {
 shareBtn.addEventListener('click', shareGeneratedText);
 
 /* -------------------------------------------------------------------------
+   Боковое меню: открытие/закрытие + свайп слева
+   ------------------------------------------------------------------------- */
+const menuBtn = document.getElementById('menu-btn');
+const sideMenu = document.getElementById('side-menu');
+const overlay = document.getElementById('overlay');
+const menuItems = document.querySelectorAll('.side-menu-item');
+const pages = document.querySelectorAll('.page');
+
+function openMenu() {
+  sideMenu.classList.add('open');
+  overlay.classList.add('open');
+  sideMenu.setAttribute('aria-hidden', 'false');
+}
+
+function closeMenu() {
+  sideMenu.classList.remove('open');
+  overlay.classList.remove('open');
+  sideMenu.setAttribute('aria-hidden', 'true');
+}
+
+function toggleMenu() {
+  if (sideMenu.classList.contains('open')) {
+    closeMenu();
+  } else {
+    openMenu();
+  }
+}
+
+menuBtn.addEventListener('click', toggleMenu);
+overlay.addEventListener('click', closeMenu);
+
+function showPage(pageId) {
+  pages.forEach((page) => {
+    page.hidden = page.id !== `page-${pageId}`;
+  });
+  menuItems.forEach((item) => {
+    item.classList.toggle('active', item.dataset.page === pageId);
+  });
+}
+
+menuItems.forEach((item) => {
+  item.addEventListener('click', () => {
+    showPage(item.dataset.page);
+    closeMenu();
+  });
+});
+
+showPage('home');
+
+// Свайп от левого края экрана открывает меню, свайп влево — закрывает.
+const EDGE_ZONE_PX = 24;
+const SWIPE_THRESHOLD_PX = 50;
+let touchStartX = null;
+let touchStartY = null;
+
+document.addEventListener(
+  'touchstart',
+  (event) => {
+    const touch = event.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  },
+  { passive: true }
+);
+
+document.addEventListener(
+  'touchend',
+  (event) => {
+    if (touchStartX === null) return;
+
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - touchStartX;
+    const deltaY = touch.clientY - touchStartY;
+
+    // Игнорируем преимущественно вертикальные жесты (обычный скролл).
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      touchStartX = null;
+      touchStartY = null;
+      return;
+    }
+
+    const menuIsOpen = sideMenu.classList.contains('open');
+
+    if (!menuIsOpen && touchStartX <= EDGE_ZONE_PX && deltaX > SWIPE_THRESHOLD_PX) {
+      openMenu();
+    } else if (menuIsOpen && deltaX < -SWIPE_THRESHOLD_PX) {
+      closeMenu();
+    }
+
+    touchStartX = null;
+    touchStartY = null;
+  },
+  { passive: true }
+);
+
+/* -------------------------------------------------------------------------
    Регистрация Service Worker (для офлайн-работы PWA)
    ------------------------------------------------------------------------- */
 if ('serviceWorker' in navigator) {
