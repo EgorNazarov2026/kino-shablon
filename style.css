@@ -1,13 +1,16 @@
 :root {
-  --bg: #111113;
-  --surface: #1c1c1f;
-  --surface-border: #2c2c30;
-  --text: #f5f4f2;
-  --text-dim: #93939a;
-  --accent: #e3b23c;
-  --accent-text: #171310;
-  --danger: #ef6a5f;
-  --radius: 14px;
+  --bg: #ffffff;
+  --surface: #f2f2f7;
+  --surface-border: #e5e5ea;
+  --text: #000000;
+  --text-dim: #8e8e93;
+  --accent: #0a84ff;
+  --accent-tint: rgba(10, 132, 255, 0.12);
+  --accent-text: #ffffff;
+  --danger: #ff3b30;
+  --danger-tint: rgba(255, 59, 48, 0.1);
+  --success: #34c759;
+  --radius: 12px;
   --gap: 20px;
 
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
@@ -45,9 +48,9 @@ body {
 .header {
   display: flex;
   align-items: center;
-  padding: 8px 4px 22px;
+  padding: 8px 4px 16px;
   border-bottom: 1px solid var(--surface-border);
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .menu-btn {
@@ -58,7 +61,7 @@ body {
   gap: 5px;
   width: 44px;
   height: 44px;
-  margin-right: 6px;
+  margin-right: 4px;
   padding: 0;
   border: none;
   background: none;
@@ -71,19 +74,15 @@ body {
   width: 22px;
   height: 2px;
   border-radius: 2px;
-  background: var(--text);
+  background: var(--accent);
 }
 
 .app-title {
   margin: 0;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.01em;
   color: var(--text);
-}
-
-.app-title::before {
-  content: "🎬 ";
 }
 
 .main {
@@ -108,7 +107,7 @@ body {
   font-size: 17px;
   color: var(--text);
   background: var(--surface);
-  border: 1px solid var(--surface-border);
+  border: 1px solid transparent;
   border-radius: var(--radius);
   padding: 14px 16px;
   min-height: 50px;
@@ -136,13 +135,12 @@ body {
   border-radius: var(--radius);
   font-family: var(--font);
   font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
+  font-weight: 600;
   min-height: 50px;
   padding: 14px 20px;
   width: 100%;
   cursor: pointer;
-  transition: transform 0.08s ease, opacity 0.15s ease;
+  transition: transform 0.08s ease, opacity 0.15s ease, background-color 0.15s ease;
 }
 
 .btn:active {
@@ -150,7 +148,7 @@ body {
 }
 
 .btn:disabled {
-  opacity: 0.7;
+  opacity: 0.4;
 }
 
 .btn-primary {
@@ -163,7 +161,6 @@ body {
   margin-top: 14px;
   background: var(--surface);
   color: var(--accent);
-  border: 1px solid var(--accent);
 }
 
 .button-row {
@@ -176,9 +173,8 @@ body {
 }
 
 .btn-secondary.copied {
-  background: var(--accent);
-  color: var(--accent-text);
-  border-color: var(--accent);
+  background: var(--success);
+  color: #ffffff;
 }
 
 .result-section {
@@ -198,7 +194,7 @@ body {
   line-height: 1.5;
   color: var(--text);
   background: var(--surface);
-  border: 1px solid var(--surface-border);
+  border: 1px solid transparent;
   border-radius: var(--radius);
   padding: 14px 16px;
   outline: none;
@@ -217,13 +213,13 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   Боковое меню (свайп слева)
+   Side menu (swipe from the left)
    ------------------------------------------------------------------------- */
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.35);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
@@ -241,9 +237,9 @@ body {
   left: 0;
   height: 100dvh;
   width: min(78vw, 300px);
-  background: var(--surface);
+  background: var(--bg);
   border-right: 1px solid var(--surface-border);
-  box-shadow: 8px 0 28px rgba(0, 0, 0, 0.4);
+  box-shadow: 8px 0 28px rgba(0, 0, 0, 0.12);
   transform: translateX(-100%);
   transition: transform 0.25s ease;
   z-index: 40;
@@ -273,7 +269,7 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .side-menu-item {
@@ -285,7 +281,7 @@ body {
   color: var(--text);
   font-family: var(--font);
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 500;
   min-height: 48px;
   padding: 12px;
   border-radius: var(--radius);
@@ -297,17 +293,18 @@ body {
 }
 
 .side-menu-item.active {
-  background: var(--accent);
-  color: var(--accent-text);
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* -------------------------------------------------------------------------
-   Пустые страницы разделов
+   Empty section pages
    ------------------------------------------------------------------------- */
 
 .page-title {
   margin: 0 0 12px;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text);
 }
@@ -320,7 +317,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   Страница «Фильмы»
+   Movies page
    ------------------------------------------------------------------------- */
 
 .page-films-header {
@@ -340,10 +337,10 @@ body {
   height: 44px;
   flex-shrink: 0;
   border-radius: var(--radius);
-  border: 1px solid var(--accent);
+  border: none;
   background: var(--surface);
   color: var(--accent);
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -445,7 +442,7 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   Модальное окно добавления фильма
+   Add-movie modal
    ------------------------------------------------------------------------- */
 
 .modal {
@@ -454,12 +451,12 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   width: min(86vw, 360px);
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: var(--radius);
+  background: var(--bg);
+  border: none;
+  border-radius: 14px;
   padding: 20px;
   z-index: 51;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
 }
 
 #film-modal-overlay {
@@ -482,12 +479,12 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   Карточка фильма
+   Movie card
    ------------------------------------------------------------------------- */
 
 .film-card-title {
   margin: 12px 0 4px;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--text);
 }
@@ -511,7 +508,7 @@ body {
 
 .film-card-delete {
   color: var(--danger);
-  border-color: var(--danger);
+  background: var(--danger-tint);
 }
 
 .film-card-date-editor {

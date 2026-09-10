@@ -1,7 +1,7 @@
 /* Простой Service Worker: кэширует статику приложения, чтобы оно
    открывалось офлайн после первого посещения. */
 
-const CACHE_NAME = 'kino-shablon-v5';
+const CACHE_NAME = 'kino-shablon-v6';
 
 const APP_SHELL = [
   './',

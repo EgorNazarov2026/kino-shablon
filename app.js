@@ -225,7 +225,7 @@ copyBtn.addEventListener('click', async () => {
 
   if (success) {
     const original = copyBtn.textContent;
-    copyBtn.textContent = 'СКОПИРОВАНО ✓';
+    copyBtn.textContent = 'COPIED ✓';
     copyBtn.classList.add('copied');
     copyBtn.disabled = true;
     setTimeout(() => {
@@ -324,7 +324,7 @@ function todayISO() {
 function formatDateDisplay(iso) {
   const [y, m, d] = iso.split('-').map(Number);
   const date = new Date(y, m - 1, d);
-  return date.toLocaleDateString('ru-RU', {
+  return date.toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -549,6 +549,7 @@ function openFilmCard(id) {
   filmCardDateDisplay.textContent = formatDateDisplay(film.sortDate);
   filmCardDateEditor.hidden = true;
   showPage('film-card');
+  appTitleEl.textContent = film.title;
 }
 
 filmCardBackBtn.addEventListener('click', () => {
@@ -596,6 +597,7 @@ const sideMenu = document.getElementById('side-menu');
 const overlay = document.getElementById('overlay');
 const menuItems = document.querySelectorAll('.side-menu-item');
 const pages = document.querySelectorAll('.page');
+const appTitleEl = document.getElementById('app-title');
 
 function openMenu() {
   sideMenu.classList.add('open');
@@ -621,12 +623,16 @@ menuBtn.addEventListener('click', toggleMenu);
 overlay.addEventListener('click', closeMenu);
 
 function showPage(pageId) {
+  let title = '';
   pages.forEach((page) => {
-    page.hidden = page.id !== `page-${pageId}`;
+    const isTarget = page.id === `page-${pageId}`;
+    page.hidden = !isTarget;
+    if (isTarget) title = page.dataset.title || '';
   });
   menuItems.forEach((item) => {
     item.classList.toggle('active', item.dataset.page === pageId);
   });
+  if (title) appTitleEl.textContent = title;
   if (pageId === 'films') {
     renderFilms();
   }

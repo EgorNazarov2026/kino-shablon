@@ -1,14 +1,14 @@
 {
-  "name": "Кино Шаблон",
-  "short_name": "Кино Шаблон",
-  "description": "Подставляет название фильма в готовый текстовый шаблон и копирует результат в буфер обмена.",
+  "name": "Movie Template",
+  "short_name": "Movie Template",
+  "description": "Fills a movie title into a ready-made text template and copies the result to the clipboard.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#111113",
-  "theme_color": "#111113",
-  "lang": "ru",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "en",
   "icons": [
     {
       "src": "icons/icon-180.png",

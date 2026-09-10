@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
-  <title>КИНО ШАБЛОН</title>
+  <title>Movie Template</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#111113" />
+  <meta name="theme-color" content="#ffffff" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Кино Шаблон" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Movie Template" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
 
   <link rel="stylesheet" href="style.css" />
@@ -20,7 +20,7 @@
 
   <div id="film-modal-overlay" class="overlay" hidden></div>
   <div id="film-modal" class="modal" hidden aria-hidden="true">
-    <h3 class="modal-title">Новый фильм</h3>
+    <h3 class="modal-title">New Movie</h3>
 
     <label class="field-label" for="film-title-input">Title</label>
     <input
@@ -37,34 +37,34 @@
     <input id="film-date-input" class="text-input" type="date" />
 
     <div class="button-row">
-      <button id="film-save-btn" class="btn btn-primary" type="button">Сохранить</button>
-      <button id="film-cancel-btn" class="btn btn-secondary" type="button">Отмена</button>
+      <button id="film-save-btn" class="btn btn-primary" type="button">Save</button>
+      <button id="film-cancel-btn" class="btn btn-secondary" type="button">Cancel</button>
     </div>
   </div>
 
   <nav id="side-menu" class="side-menu" aria-hidden="true">
-    <div class="side-menu-header">Меню</div>
+    <div class="side-menu-header">Menu</div>
     <ul class="side-menu-list">
-      <li><button class="side-menu-item" type="button" data-page="home">Дом</button></li>
-      <li><button class="side-menu-item" type="button" data-page="films">Фильмы</button></li>
-      <li><button class="side-menu-item" type="button" data-page="new">Новинки</button></li>
-      <li><button class="side-menu-item" type="button" data-page="oscar">На Оскар</button></li>
-      <li><button class="side-menu-item" type="button" data-page="classic">Классика</button></li>
-      <li><button class="side-menu-item" type="button" data-page="series">Сериалы</button></li>
+      <li><button class="side-menu-item" type="button" data-page="home">Home</button></li>
+      <li><button class="side-menu-item" type="button" data-page="films">Movies</button></li>
+      <li><button class="side-menu-item" type="button" data-page="new">New</button></li>
+      <li><button class="side-menu-item" type="button" data-page="oscar">For Oscar</button></li>
+      <li><button class="side-menu-item" type="button" data-page="classic">Classics</button></li>
+      <li><button class="side-menu-item" type="button" data-page="series">TV Shows</button></li>
     </ul>
   </nav>
 
   <div class="screen">
     <header class="header">
-      <button id="menu-btn" class="menu-btn" type="button" aria-label="Открыть меню">
+      <button id="menu-btn" class="menu-btn" type="button" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
-      <h1 class="app-title">КИНО ШАБЛОН</h1>
+      <h1 id="app-title" class="app-title">Home</h1>
     </header>
 
     <main class="main">
-      <section id="page-home" class="page">
-        <label class="field-label" for="title-input">Название фильма</label>
+      <section id="page-home" class="page" data-title="Home">
+        <label class="field-label" for="title-input">Movie Title</label>
         <input
           id="title-input"
           class="text-input"
@@ -74,16 +74,16 @@
           autocorrect="off"
           autocapitalize="sentences"
           spellcheck="false"
-          placeholder="Например, Anora"
+          placeholder="e.g. Anora"
         />
-        <p id="error-msg" class="error-msg" hidden>Введите название фильма</p>
+        <p id="error-msg" class="error-msg" hidden>Enter a movie title</p>
 
         <button id="generate-btn" class="btn btn-primary" type="button">
-          СОЗДАТЬ ШАБЛОН
+          GENERATE TEMPLATE
         </button>
 
         <section id="result-section" class="result-section" hidden>
-          <label class="field-label" for="result-area">Готовый шаблон</label>
+          <label class="field-label" for="result-area">Generated Template</label>
           <textarea
             id="result-area"
             class="result-area"
@@ -92,27 +92,27 @@
 
           <div class="button-row">
             <button id="copy-btn" class="btn btn-secondary" type="button">
-              КОПИРОВАТЬ
+              COPY
             </button>
             <button id="share-btn" class="btn btn-secondary" type="button" hidden>
-              ПОДЕЛИТЬСЯ
+              SHARE
             </button>
           </div>
         </section>
       </section>
 
-      <section id="page-films" class="page" hidden>
+      <section id="page-films" class="page" hidden data-title="Movies">
         <div class="page-films-header">
-          <h2 class="page-title">Фильмы</h2>
-          <button id="add-film-btn" class="icon-btn" type="button" aria-label="Добавить фильм">+</button>
+          <h2 class="page-title">Movies</h2>
+          <button id="add-film-btn" class="icon-btn" type="button" aria-label="Add movie">+</button>
         </div>
 
         <ul id="films-list" class="films-list"></ul>
-        <p id="films-empty" class="page-placeholder">Список фильмов пуст.</p>
+        <p id="films-empty" class="page-placeholder">No movies yet.</p>
       </section>
 
-      <section id="page-film-card" class="page" hidden>
-        <button id="film-card-back-btn" class="icon-btn" type="button" aria-label="Назад к списку">‹</button>
+      <section id="page-film-card" class="page" hidden data-title="Movie">
+        <button id="film-card-back-btn" class="icon-btn" type="button" aria-label="Back to list">‹</button>
 
         <h2 id="film-card-title" class="film-card-title"></h2>
         <p id="film-card-date-display" class="film-card-date-display"></p>
@@ -128,30 +128,30 @@
           <label class="field-label" for="film-card-date-input">Date</label>
           <input id="film-card-date-input" class="text-input" type="date" />
           <div class="button-row">
-            <button id="film-card-date-save-btn" class="btn btn-primary" type="button">Сохранить</button>
-            <button id="film-card-date-cancel-btn" class="btn btn-secondary" type="button">Отмена</button>
+            <button id="film-card-date-save-btn" class="btn btn-primary" type="button">Save</button>
+            <button id="film-card-date-cancel-btn" class="btn btn-secondary" type="button">Cancel</button>
           </div>
         </div>
       </section>
 
-      <section id="page-new" class="page" hidden>
-        <h2 class="page-title">Новинки</h2>
-        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
+      <section id="page-new" class="page" hidden data-title="New">
+        <h2 class="page-title">New</h2>
+        <p class="page-placeholder">Content coming soon.</p>
       </section>
 
-      <section id="page-oscar" class="page" hidden>
-        <h2 class="page-title">На Оскар</h2>
-        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
+      <section id="page-oscar" class="page" hidden data-title="For Oscar">
+        <h2 class="page-title">For Oscar</h2>
+        <p class="page-placeholder">Content coming soon.</p>
       </section>
 
-      <section id="page-classic" class="page" hidden>
-        <h2 class="page-title">Классика</h2>
-        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
+      <section id="page-classic" class="page" hidden data-title="Classics">
+        <h2 class="page-title">Classics</h2>
+        <p class="page-placeholder">Content coming soon.</p>
       </section>
 
-      <section id="page-series" class="page" hidden>
-        <h2 class="page-title">Сериалы</h2>
-        <p class="page-placeholder">Здесь скоро появится содержимое.</p>
+      <section id="page-series" class="page" hidden data-title="TV Shows">
+        <h2 class="page-title">TV Shows</h2>
+        <p class="page-placeholder">Content coming soon.</p>
       </section>
     </main>
   </div>
