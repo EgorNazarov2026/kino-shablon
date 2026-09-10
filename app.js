@@ -331,6 +331,36 @@ function formatDateDisplay(iso) {
   });
 }
 
+// Компактный формат ММ/ДД для строки в списке фильмов.
+function formatDateShort(iso) {
+  const [, m, d] = iso.split('-');
+  return `${m}/${d}`;
+}
+
+// Палитра для декоративных круглых аватаров в списке фильмов.
+const AVATAR_COLORS = [
+  '#4f8fdb', // синий
+  '#9b6fd6', // фиолетовый
+  '#e0554f', // красный
+  '#3fa8ab', // бирюзовый
+  '#5bbd6a', // зелёный
+  '#e0a63f', // янтарный
+  '#7d8791', // серый
+];
+
+function avatarColorForTitle(title) {
+  let hash = 0;
+  for (let i = 0; i < title.length; i += 1) {
+    hash = (hash * 31 + title.charCodeAt(i)) >>> 0;
+  }
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+}
+
+function avatarLetterForTitle(title) {
+  const trimmed = title.trim();
+  return trimmed ? trimmed[0].toUpperCase() : '?';
+}
+
 // Цвет индикатора всегда пересчитывается от текущей даты в момент отрисовки.
 function getFilmStatus(film) {
   if (!film.dateProvided) return 'yellow';
@@ -455,11 +485,18 @@ function renderFilms() {
     const content = document.createElement('div');
     content.className = 'film-row-content';
 
-    const indicator = document.createElement('span');
-    indicator.className = `film-indicator film-indicator--${getFilmStatus(film)}`;
+    const avatar = document.createElement('span');
+    avatar.className = 'film-avatar';
+    avatar.style.background = avatarColorForTitle(film.title);
+    avatar.textContent = avatarLetterForTitle(film.title);
+    avatar.setAttribute('aria-hidden', 'true');
 
     const info = document.createElement('div');
     info.className = 'film-info';
+
+    // Строка 1: название и дата на одной линии.
+    const topRow = document.createElement('div');
+    topRow.className = 'film-row-top';
 
     const titleEl = document.createElement('span');
     titleEl.className = 'film-title';
@@ -467,11 +504,30 @@ function renderFilms() {
 
     const dateEl = document.createElement('span');
     dateEl.className = 'film-date';
-    dateEl.textContent = formatDateDisplay(film.sortDate);
+    dateEl.textContent = formatDateShort(film.sortDate);
 
-    info.appendChild(titleEl);
-    info.appendChild(dateEl);
-    content.appendChild(indicator);
+    topRow.appendChild(titleEl);
+    topRow.appendChild(dateEl);
+    info.appendChild(topRow);
+
+    // Строка 2 (на будущее): подзаголовок, например режиссёр —
+    // рисуется только если у фильма есть поле subtitle.
+    if (film.subtitle) {
+      const subtitleEl = document.createElement('span');
+      subtitleEl.className = 'film-subtitle';
+      subtitleEl.textContent = film.subtitle;
+      info.appendChild(subtitleEl);
+    }
+
+    // Строка 3 (на будущее): заметка — рисуется только если есть film.note.
+    if (film.note) {
+      const noteEl = document.createElement('span');
+      noteEl.className = 'film-note';
+      noteEl.textContent = film.note;
+      info.appendChild(noteEl);
+    }
+
+    content.appendChild(avatar);
     content.appendChild(info);
 
     attachSwipeToDelete(content, film.id);

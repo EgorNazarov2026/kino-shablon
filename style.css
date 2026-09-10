@@ -48,8 +48,8 @@ body {
   display: grid;
   grid-template-columns: 44px 1fr 44px;
   align-items: center;
-  padding: calc(max(env(safe-area-inset-top), 20px) + 10px)
-    max(env(safe-area-inset-right), 20px) 14px
+  padding: calc(max(env(safe-area-inset-top), 20px) + 14px)
+    max(env(safe-area-inset-right), 20px) 18px
     max(env(safe-area-inset-left), 20px);
   background: var(--header-bg);
   border-bottom: 1px solid var(--surface-border);
@@ -83,9 +83,9 @@ body {
 .app-title {
   grid-column: 2;
   margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   text-align: center;
   color: var(--text);
 }
@@ -398,8 +398,9 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 2px;
+  gap: 14px;
+  padding: 12px 2px;
+  min-height: 66px;
   background: var(--bg);
   transform: translateX(0);
   transition: transform 0.2s ease;
@@ -410,41 +411,66 @@ body {
   transition: none;
 }
 
-.film-indicator {
-  width: 10px;
-  height: 10px;
+.film-avatar {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   flex-shrink: 0;
-}
-
-.film-indicator--green {
-  background: #34c759;
-}
-
-.film-indicator--yellow {
-  background: #ffcc00;
-}
-
-.film-indicator--red {
-  background: #ff3b30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .film-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   min-width: 0;
+  flex: 1;
+}
+
+.film-row-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .film-title {
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .film-date {
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.film-subtitle {
+  font-size: 15px;
+  color: var(--text);
+  opacity: 0.75;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.film-note {
   font-size: 13px;
   color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* -------------------------------------------------------------------------
