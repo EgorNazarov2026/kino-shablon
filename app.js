@@ -265,6 +265,147 @@ async function shareGeneratedText() {
 shareBtn.addEventListener('click', shareGeneratedText);
 
 /* -------------------------------------------------------------------------
+   Страница «Фильмы»: хранение, сортировка и цветовой индикатор даты
+   ------------------------------------------------------------------------- */
+const FILMS_STORAGE_KEY = 'kino-shablon:films';
+
+const addFilmBtn = document.getElementById('add-film-btn');
+const filmForm = document.getElementById('film-form');
+const filmTitleInput = document.getElementById('film-title-input');
+const filmDateInput = document.getElementById('film-date-input');
+const filmSaveBtn = document.getElementById('film-save-btn');
+const filmCancelBtn = document.getElementById('film-cancel-btn');
+const filmsList = document.getElementById('films-list');
+const filmsEmpty = document.getElementById('films-empty');
+
+function loadFilms() {
+  try {
+    const raw = localStorage.getItem(FILMS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (err) {
+    return [];
+  }
+}
+
+function saveFilms() {
+  try {
+    localStorage.setItem(FILMS_STORAGE_KEY, JSON.stringify(films));
+  } catch (err) {
+    // localStorage недоступен (например, приватный режим) — список останется
+    // рабочим в течение сессии, просто не сохранится между запусками.
+  }
+}
+
+let films = loadFilms();
+
+function todayISO() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function formatDateDisplay(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+// Цвет индикатора всегда пересчитывается от текущей даты в момент отрисовки.
+function getFilmStatus(film) {
+  if (!film.dateProvided) return 'yellow';
+  return film.sortDate < todayISO() ? 'red' : 'green';
+}
+
+function renderFilms() {
+  const sorted = [...films].sort((a, b) => {
+    if (a.sortDate < b.sortDate) return -1;
+    if (a.sortDate > b.sortDate) return 1;
+    return 0;
+  });
+
+  filmsList.innerHTML = '';
+
+  sorted.forEach((film) => {
+    const li = document.createElement('li');
+    li.className = 'film-item';
+
+    const indicator = document.createElement('span');
+    indicator.className = `film-indicator film-indicator--${getFilmStatus(film)}`;
+
+    const info = document.createElement('div');
+    info.className = 'film-info';
+
+    const titleEl = document.createElement('span');
+    titleEl.className = 'film-title';
+    titleEl.textContent = film.title;
+
+    const dateEl = document.createElement('span');
+    dateEl.className = 'film-date';
+    dateEl.textContent = formatDateDisplay(film.sortDate);
+
+    info.appendChild(titleEl);
+    info.appendChild(dateEl);
+    li.appendChild(indicator);
+    li.appendChild(info);
+    filmsList.appendChild(li);
+  });
+
+  filmsEmpty.hidden = sorted.length > 0;
+  filmsList.hidden = sorted.length === 0;
+}
+
+function openFilmForm() {
+  filmTitleInput.value = '';
+  filmDateInput.value = '';
+  filmForm.hidden = false;
+  filmTitleInput.focus();
+}
+
+function closeFilmForm() {
+  filmForm.hidden = true;
+}
+
+addFilmBtn.addEventListener('click', () => {
+  if (filmForm.hidden) {
+    openFilmForm();
+  } else {
+    closeFilmForm();
+  }
+});
+
+filmCancelBtn.addEventListener('click', closeFilmForm);
+
+filmSaveBtn.addEventListener('click', () => {
+  const title = filmTitleInput.value.trim();
+  if (!title) {
+    filmTitleInput.focus();
+    return;
+  }
+
+  const explicitDate = filmDateInput.value; // '' если пользователь не выбрал дату
+  const dateProvided = Boolean(explicitDate);
+
+  films.push({
+    id: `film-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    title,
+    dateProvided,
+    sortDate: dateProvided ? explicitDate : todayISO(),
+  });
+
+  saveFilms();
+  renderFilms();
+  closeFilmForm();
+});
+
+renderFilms();
+
+/* -------------------------------------------------------------------------
    Боковое меню: открытие/закрытие + свайп слева
    ------------------------------------------------------------------------- */
 const menuBtn = document.getElementById('menu-btn');
@@ -303,6 +444,9 @@ function showPage(pageId) {
   menuItems.forEach((item) => {
     item.classList.toggle('active', item.dataset.page === pageId);
   });
+  if (pageId === 'films') {
+    renderFilms();
+  }
 }
 
 menuItems.forEach((item) => {

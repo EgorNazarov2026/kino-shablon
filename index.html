@@ -22,6 +22,7 @@
     <div class="side-menu-header">Меню</div>
     <ul class="side-menu-list">
       <li><button class="side-menu-item" type="button" data-page="home">Дом</button></li>
+      <li><button class="side-menu-item" type="button" data-page="films">Фильмы</button></li>
       <li><button class="side-menu-item" type="button" data-page="new">Новинки</button></li>
       <li><button class="side-menu-item" type="button" data-page="oscar">На Оскар</button></li>
       <li><button class="side-menu-item" type="button" data-page="classic">Классика</button></li>
@@ -74,6 +75,38 @@
             </button>
           </div>
         </section>
+      </section>
+
+      <section id="page-films" class="page" hidden>
+        <div class="page-films-header">
+          <h2 class="page-title">Фильмы</h2>
+          <button id="add-film-btn" class="icon-btn" type="button" aria-label="Добавить фильм">+</button>
+        </div>
+
+        <div id="film-form" class="film-form" hidden>
+          <label class="field-label" for="film-title-input">Название фильма</label>
+          <input
+            id="film-title-input"
+            class="text-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="sentences"
+            spellcheck="false"
+            placeholder="Название фильма"
+          />
+
+          <label class="field-label" for="film-date-input">Дата премьеры</label>
+          <input id="film-date-input" class="text-input" type="date" />
+
+          <div class="button-row">
+            <button id="film-save-btn" class="btn btn-primary" type="button">Сохранить</button>
+            <button id="film-cancel-btn" class="btn btn-secondary" type="button">Отмена</button>
+          </div>
+        </div>
+
+        <ul id="films-list" class="films-list"></ul>
+        <p id="films-empty" class="page-placeholder">Список фильмов пуст.</p>
       </section>
 
       <section id="page-new" class="page" hidden>

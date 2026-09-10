@@ -171,7 +171,7 @@ body {
   gap: 12px;
 }
 
-.button-row .btn-secondary {
+.button-row .btn {
   margin-top: 0;
 }
 
@@ -316,5 +316,112 @@ body {
   margin: 0;
   font-size: 15px;
   line-height: 1.5;
+  color: var(--text-dim);
+}
+
+/* -------------------------------------------------------------------------
+   Страница «Фильмы»
+   ------------------------------------------------------------------------- */
+
+.page-films-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-films-header .page-title {
+  margin: 0;
+}
+
+.icon-btn {
+  appearance: none;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 24px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-btn:active {
+  transform: scale(0.94);
+}
+
+.film-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.film-form .text-input {
+  margin-bottom: 16px;
+}
+
+.film-form .button-row {
+  margin-top: 4px;
+}
+
+.films-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.film-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.film-item:last-child {
+  border-bottom: none;
+}
+
+.film-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.film-indicator--green {
+  background: #34c759;
+}
+
+.film-indicator--yellow {
+  background: #ffcc00;
+}
+
+.film-indicator--red {
+  background: #ff3b30;
+}
+
+.film-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.film-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.film-date {
+  font-size: 13px;
   color: var(--text-dim);
 }
