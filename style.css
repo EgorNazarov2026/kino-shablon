@@ -355,22 +355,6 @@ body {
   transform: scale(0.94);
 }
 
-.film-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--surface-border);
-}
-
-.film-form .text-input {
-  margin-bottom: 16px;
-}
-
-.film-form .button-row {
-  margin-top: 4px;
-}
-
 .films-list {
   list-style: none;
   margin: 0;
@@ -378,15 +362,49 @@ body {
 }
 
 .film-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 2px;
+  position: relative;
+  overflow: hidden;
   border-bottom: 1px solid var(--surface-border);
 }
 
 .film-item:last-child {
   border-bottom: none;
+}
+
+.film-row-delete {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+  background: var(--danger);
+}
+
+.film-row-delete-btn {
+  width: 80px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.film-row-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 2px;
+  background: var(--bg);
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+  touch-action: pan-y;
+}
+
+.film-row-content.dragging {
+  transition: none;
 }
 
 .film-indicator {
@@ -424,4 +442,86 @@ body {
 .film-date {
   font-size: 13px;
   color: var(--text-dim);
+}
+
+/* -------------------------------------------------------------------------
+   Модальное окно добавления фильма
+   ------------------------------------------------------------------------- */
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(86vw, 360px);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  z-index: 51;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+#film-modal-overlay {
+  z-index: 50;
+}
+
+.modal-title {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.modal .text-input {
+  margin-bottom: 16px;
+}
+
+.modal .button-row {
+  margin-top: 4px;
+}
+
+/* -------------------------------------------------------------------------
+   Карточка фильма
+   ------------------------------------------------------------------------- */
+
+.film-card-title {
+  margin: 12px 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.film-card-date-display {
+  margin: 0 0 24px;
+  font-size: 15px;
+  color: var(--text-dim);
+}
+
+.film-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.film-card-actions .btn {
+  flex: 1;
+  padding: 12px 8px;
+  font-size: 14px;
+}
+
+.film-card-delete {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.film-card-date-editor {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--surface-border);
+}
+
+.film-card-date-editor .text-input {
+  margin-bottom: 16px;
 }

@@ -265,18 +265,33 @@ async function shareGeneratedText() {
 shareBtn.addEventListener('click', shareGeneratedText);
 
 /* -------------------------------------------------------------------------
-   Страница «Фильмы»: хранение, сортировка и цветовой индикатор даты
+   Страница «Фильмы»: хранение, сортировка, цветовой индикатор,
+   модальное окно добавления, карточка фильма и удаление свайпом.
    ------------------------------------------------------------------------- */
 const FILMS_STORAGE_KEY = 'kino-shablon:films';
 
 const addFilmBtn = document.getElementById('add-film-btn');
-const filmForm = document.getElementById('film-form');
+const filmsList = document.getElementById('films-list');
+const filmsEmpty = document.getElementById('films-empty');
+
+const filmModalOverlay = document.getElementById('film-modal-overlay');
+const filmModal = document.getElementById('film-modal');
 const filmTitleInput = document.getElementById('film-title-input');
 const filmDateInput = document.getElementById('film-date-input');
 const filmSaveBtn = document.getElementById('film-save-btn');
 const filmCancelBtn = document.getElementById('film-cancel-btn');
-const filmsList = document.getElementById('films-list');
-const filmsEmpty = document.getElementById('films-empty');
+
+const filmCardBackBtn = document.getElementById('film-card-back-btn');
+const filmCardTitleEl = document.getElementById('film-card-title');
+const filmCardDateDisplay = document.getElementById('film-card-date-display');
+const filmCardDateBtn = document.getElementById('film-card-date-btn');
+const filmCardDeleteBtn = document.getElementById('film-card-delete-btn');
+const filmCardDateEditor = document.getElementById('film-card-date-editor');
+const filmCardDateInput = document.getElementById('film-card-date-input');
+const filmCardDateSaveBtn = document.getElementById('film-card-date-save-btn');
+const filmCardDateCancelBtn = document.getElementById('film-card-date-cancel-btn');
+
+let currentFilmCardId = null;
 
 function loadFilms() {
   try {
@@ -322,18 +337,123 @@ function getFilmStatus(film) {
   return film.sortDate < todayISO() ? 'red' : 'green';
 }
 
-function renderFilms() {
-  const sorted = [...films].sort((a, b) => {
-    if (a.sortDate < b.sortDate) return -1;
-    if (a.sortDate > b.sortDate) return 1;
-    return 0;
-  });
+function getFilmById(id) {
+  return films.find((f) => f.id === id) || null;
+}
 
+// Группы: 0 — предстоящие (по возрастанию), 1 — сегодня, 2 — прошедшие
+// (от самых недавних к самым старым).
+function filmGroup(sortDate, today) {
+  if (sortDate > today) return 0;
+  if (sortDate === today) return 1;
+  return 2;
+}
+
+function sortedFilms() {
+  const today = todayISO();
+  return [...films].sort((a, b) => {
+    const ga = filmGroup(a.sortDate, today);
+    const gb = filmGroup(b.sortDate, today);
+    if (ga !== gb) return ga - gb;
+    if (ga === 0) {
+      // предстоящие — по возрастанию (ближайшие сначала)
+      return a.sortDate < b.sortDate ? -1 : a.sortDate > b.sortDate ? 1 : 0;
+    }
+    if (ga === 2) {
+      // прошедшие — по убыванию (недавно прошедшие сначала)
+      return a.sortDate < b.sortDate ? 1 : a.sortDate > b.sortDate ? -1 : 0;
+    }
+    return 0; // группа «сегодня» — порядок между собой не важен
+  });
+}
+
+function attachSwipeToDelete(contentEl, filmId) {
+  const OPEN_TRANSLATE = -80;
+  const THRESHOLD = 40;
+  let startX = 0;
+  let startY = 0;
+  let dragging = false;
+  let baseX = 0;
+
+  contentEl.addEventListener(
+    'touchstart',
+    (event) => {
+      const touch = event.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      dragging = false;
+      contentEl.classList.add('dragging');
+    },
+    { passive: true }
+  );
+
+  contentEl.addEventListener(
+    'touchmove',
+    (event) => {
+      const touch = event.touches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+
+      if (!dragging) {
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+          dragging = true;
+        } else {
+          return;
+        }
+      }
+
+      const translate = Math.min(0, Math.max(OPEN_TRANSLATE, baseX + dx));
+      contentEl.style.transform = `translateX(${translate}px)`;
+    },
+    { passive: true }
+  );
+
+  contentEl.addEventListener(
+    'touchend',
+    (event) => {
+      contentEl.classList.remove('dragging');
+
+      if (!dragging) {
+        if (baseX !== 0) {
+          // Строка была открыта свайпом — тап закрывает её обратно.
+          baseX = 0;
+          contentEl.style.transform = 'translateX(0)';
+        } else {
+          openFilmCard(filmId);
+        }
+        return;
+      }
+
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - startX;
+      const finalOffset = baseX + dx;
+
+      baseX = finalOffset < -THRESHOLD ? OPEN_TRANSLATE : 0;
+      contentEl.style.transform = `translateX(${baseX}px)`;
+    },
+    { passive: true }
+  );
+}
+
+function renderFilms() {
+  const sorted = sortedFilms();
   filmsList.innerHTML = '';
 
   sorted.forEach((film) => {
     const li = document.createElement('li');
     li.className = 'film-item';
+
+    const deleteWrap = document.createElement('div');
+    deleteWrap.className = 'film-row-delete';
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'film-row-delete-btn';
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.addEventListener('click', () => deleteFilm(film.id));
+    deleteWrap.appendChild(deleteBtn);
+
+    const content = document.createElement('div');
+    content.className = 'film-row-content';
 
     const indicator = document.createElement('span');
     indicator.className = `film-indicator film-indicator--${getFilmStatus(film)}`;
@@ -351,8 +471,13 @@ function renderFilms() {
 
     info.appendChild(titleEl);
     info.appendChild(dateEl);
-    li.appendChild(indicator);
-    li.appendChild(info);
+    content.appendChild(indicator);
+    content.appendChild(info);
+
+    attachSwipeToDelete(content, film.id);
+
+    li.appendChild(deleteWrap);
+    li.appendChild(content);
     filmsList.appendChild(li);
   });
 
@@ -360,26 +485,36 @@ function renderFilms() {
   filmsList.hidden = sorted.length === 0;
 }
 
-function openFilmForm() {
+function deleteFilm(id) {
+  films = films.filter((f) => f.id !== id);
+  saveFilms();
+  renderFilms();
+  if (currentFilmCardId === id) {
+    currentFilmCardId = null;
+    showPage('films');
+  }
+}
+
+/* ---- Модальное окно добавления фильма ---- */
+
+function openFilmModal() {
   filmTitleInput.value = '';
   filmDateInput.value = '';
-  filmForm.hidden = false;
+  filmModalOverlay.hidden = false;
+  filmModal.hidden = false;
+  filmModal.setAttribute('aria-hidden', 'false');
   filmTitleInput.focus();
 }
 
-function closeFilmForm() {
-  filmForm.hidden = true;
+function closeFilmModal() {
+  filmModalOverlay.hidden = true;
+  filmModal.hidden = true;
+  filmModal.setAttribute('aria-hidden', 'true');
 }
 
-addFilmBtn.addEventListener('click', () => {
-  if (filmForm.hidden) {
-    openFilmForm();
-  } else {
-    closeFilmForm();
-  }
-});
-
-filmCancelBtn.addEventListener('click', closeFilmForm);
+addFilmBtn.addEventListener('click', openFilmModal);
+filmCancelBtn.addEventListener('click', closeFilmModal);
+filmModalOverlay.addEventListener('click', closeFilmModal);
 
 filmSaveBtn.addEventListener('click', () => {
   const title = filmTitleInput.value.trim();
@@ -400,7 +535,55 @@ filmSaveBtn.addEventListener('click', () => {
 
   saveFilms();
   renderFilms();
-  closeFilmForm();
+  closeFilmModal();
+});
+
+/* ---- Карточка фильма ---- */
+
+function openFilmCard(id) {
+  const film = getFilmById(id);
+  if (!film) return;
+
+  currentFilmCardId = id;
+  filmCardTitleEl.textContent = film.title;
+  filmCardDateDisplay.textContent = formatDateDisplay(film.sortDate);
+  filmCardDateEditor.hidden = true;
+  showPage('film-card');
+}
+
+filmCardBackBtn.addEventListener('click', () => {
+  currentFilmCardId = null;
+  showPage('films');
+});
+
+filmCardDateBtn.addEventListener('click', () => {
+  const film = getFilmById(currentFilmCardId);
+  if (!film) return;
+  filmCardDateInput.value = film.sortDate;
+  filmCardDateEditor.hidden = false;
+});
+
+filmCardDateCancelBtn.addEventListener('click', () => {
+  filmCardDateEditor.hidden = true;
+});
+
+filmCardDateSaveBtn.addEventListener('click', () => {
+  const film = getFilmById(currentFilmCardId);
+  if (!film) return;
+
+  const newDate = filmCardDateInput.value;
+  if (!newDate) return;
+
+  film.sortDate = newDate;
+  film.dateProvided = true;
+  saveFilms();
+
+  filmCardDateDisplay.textContent = formatDateDisplay(film.sortDate);
+  filmCardDateEditor.hidden = true;
+});
+
+filmCardDeleteBtn.addEventListener('click', () => {
+  if (currentFilmCardId) deleteFilm(currentFilmCardId);
 });
 
 renderFilms();

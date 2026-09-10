@@ -18,6 +18,30 @@
 <body>
   <div id="overlay" class="overlay"></div>
 
+  <div id="film-modal-overlay" class="overlay" hidden></div>
+  <div id="film-modal" class="modal" hidden aria-hidden="true">
+    <h3 class="modal-title">Новый фильм</h3>
+
+    <label class="field-label" for="film-title-input">Title</label>
+    <input
+      id="film-title-input"
+      class="text-input"
+      type="text"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="sentences"
+      spellcheck="false"
+    />
+
+    <label class="field-label" for="film-date-input">Date</label>
+    <input id="film-date-input" class="text-input" type="date" />
+
+    <div class="button-row">
+      <button id="film-save-btn" class="btn btn-primary" type="button">Сохранить</button>
+      <button id="film-cancel-btn" class="btn btn-secondary" type="button">Отмена</button>
+    </div>
+  </div>
+
   <nav id="side-menu" class="side-menu" aria-hidden="true">
     <div class="side-menu-header">Меню</div>
     <ul class="side-menu-list">
@@ -83,30 +107,31 @@
           <button id="add-film-btn" class="icon-btn" type="button" aria-label="Добавить фильм">+</button>
         </div>
 
-        <div id="film-form" class="film-form" hidden>
-          <label class="field-label" for="film-title-input">Название фильма</label>
-          <input
-            id="film-title-input"
-            class="text-input"
-            type="text"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="sentences"
-            spellcheck="false"
-            placeholder="Название фильма"
-          />
-
-          <label class="field-label" for="film-date-input">Дата премьеры</label>
-          <input id="film-date-input" class="text-input" type="date" />
-
-          <div class="button-row">
-            <button id="film-save-btn" class="btn btn-primary" type="button">Сохранить</button>
-            <button id="film-cancel-btn" class="btn btn-secondary" type="button">Отмена</button>
-          </div>
-        </div>
-
         <ul id="films-list" class="films-list"></ul>
         <p id="films-empty" class="page-placeholder">Список фильмов пуст.</p>
+      </section>
+
+      <section id="page-film-card" class="page" hidden>
+        <button id="film-card-back-btn" class="icon-btn" type="button" aria-label="Назад к списку">‹</button>
+
+        <h2 id="film-card-title" class="film-card-title"></h2>
+        <p id="film-card-date-display" class="film-card-date-display"></p>
+
+        <div class="film-card-actions">
+          <button id="film-card-date-btn" class="btn btn-secondary" type="button">Date</button>
+          <button id="film-card-links-btn" class="btn btn-secondary" type="button" disabled>Links</button>
+          <button id="film-card-info-btn" class="btn btn-secondary" type="button" disabled>Info</button>
+          <button id="film-card-delete-btn" class="btn btn-secondary film-card-delete" type="button">Delete</button>
+        </div>
+
+        <div id="film-card-date-editor" class="film-card-date-editor" hidden>
+          <label class="field-label" for="film-card-date-input">Date</label>
+          <input id="film-card-date-input" class="text-input" type="date" />
+          <div class="button-row">
+            <button id="film-card-date-save-btn" class="btn btn-primary" type="button">Сохранить</button>
+            <button id="film-card-date-cancel-btn" class="btn btn-secondary" type="button">Отмена</button>
+          </div>
+        </div>
       </section>
 
       <section id="page-new" class="page" hidden>
