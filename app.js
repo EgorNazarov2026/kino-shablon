@@ -551,6 +551,83 @@ function deleteFilm(id) {
   }
 }
 
+/* ---- Плавающая кнопка добавления: долгое нажатие перемещает её по экрану ---- */
+
+const FAB_LONG_PRESS_MS = 450;
+const FAB_MOVE_CANCEL_PX = 8;
+
+let fabLongPressTimer = null;
+let fabDragging = false;
+let fabJustDragged = false;
+let fabPointerId = null;
+let fabPointerStart = { x: 0, y: 0 };
+let fabOriginStart = { x: 0, y: 0 };
+
+function placeFabAt(left, top) {
+  const rect = addFilmBtn.getBoundingClientRect();
+  const margin = 8;
+  const maxLeft = window.innerWidth - rect.width - margin;
+  const maxTop = window.innerHeight - rect.height - margin;
+  const clampedLeft = Math.min(Math.max(margin, left), Math.max(margin, maxLeft));
+  const clampedTop = Math.min(Math.max(margin, top), Math.max(margin, maxTop));
+  addFilmBtn.style.left = `${clampedLeft}px`;
+  addFilmBtn.style.top = `${clampedTop}px`;
+  addFilmBtn.style.right = 'auto';
+  addFilmBtn.style.bottom = 'auto';
+}
+
+addFilmBtn.addEventListener('pointerdown', (event) => {
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+  fabPointerId = event.pointerId;
+  fabPointerStart = { x: event.clientX, y: event.clientY };
+  const rect = addFilmBtn.getBoundingClientRect();
+  fabOriginStart = { x: rect.left, y: rect.top };
+  fabDragging = false;
+  addFilmBtn.setPointerCapture(event.pointerId);
+
+  clearTimeout(fabLongPressTimer);
+  fabLongPressTimer = setTimeout(() => {
+    fabDragging = true;
+    addFilmBtn.classList.add('dragging');
+    if (navigator.vibrate) navigator.vibrate(10);
+  }, FAB_LONG_PRESS_MS);
+});
+
+addFilmBtn.addEventListener('pointermove', (event) => {
+  if (event.pointerId !== fabPointerId) return;
+  const dx = event.clientX - fabPointerStart.x;
+  const dy = event.clientY - fabPointerStart.y;
+
+  if (!fabDragging) {
+    if (Math.abs(dx) > FAB_MOVE_CANCEL_PX || Math.abs(dy) > FAB_MOVE_CANCEL_PX) {
+      clearTimeout(fabLongPressTimer);
+    }
+    return;
+  }
+
+  event.preventDefault();
+  placeFabAt(fabOriginStart.x + dx, fabOriginStart.y + dy);
+});
+
+function endFabPress(event) {
+  if (event.pointerId !== fabPointerId) return;
+  clearTimeout(fabLongPressTimer);
+  if (addFilmBtn.hasPointerCapture(event.pointerId)) {
+    addFilmBtn.releasePointerCapture(event.pointerId);
+  }
+  fabPointerId = null;
+
+  if (fabDragging) {
+    fabDragging = false;
+    fabJustDragged = true;
+    addFilmBtn.classList.remove('dragging');
+  }
+}
+
+addFilmBtn.addEventListener('pointerup', endFabPress);
+addFilmBtn.addEventListener('pointercancel', endFabPress);
+
 /* ---- Модальное окно добавления фильма ---- */
 
 const FILM_MODAL_ANIM_MS = 260;
@@ -586,7 +663,13 @@ function closeFilmModal() {
   }, FILM_MODAL_ANIM_MS);
 }
 
-addFilmBtn.addEventListener('click', openFilmModal);
+addFilmBtn.addEventListener('click', () => {
+  if (fabJustDragged) {
+    fabJustDragged = false;
+    return;
+  }
+  openFilmModal();
+});
 filmCancelBtn.addEventListener('click', closeFilmModal);
 filmModalOverlay.addEventListener('click', closeFilmModal);
 
@@ -707,6 +790,7 @@ function showPage(pageId) {
     item.classList.toggle('active', item.dataset.page === pageId);
   });
   if (title) appTitleEl.textContent = title;
+  addFilmBtn.hidden = pageId !== 'films';
   if (pageId === 'films') {
     renderFilms();
   }

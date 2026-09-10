@@ -41,6 +41,8 @@
     </div>
   </div>
 
+  <button id="add-film-btn" class="fab-btn" type="button" aria-label="Add movie" hidden>+</button>
+
   <nav id="side-menu" class="side-menu" aria-hidden="true">
     <ul class="side-menu-list">
       <li><button class="side-menu-item" type="button" data-page="home">Home</button></li>
@@ -100,10 +102,6 @@
       </section>
 
       <section id="page-films" class="page" hidden data-title="Movies">
-        <div class="page-films-header">
-          <button id="add-film-btn" class="icon-btn" type="button" aria-label="Add movie">+</button>
-        </div>
-
         <ul id="films-list" class="films-list"></ul>
         <p id="films-empty" class="page-placeholder">No movies yet.</p>
       </section>

@@ -330,13 +330,6 @@ body {
    Movies page
    ------------------------------------------------------------------------- */
 
-.page-films-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-}
-
 .icon-btn {
   appearance: none;
   width: 44px;
@@ -356,6 +349,46 @@ body {
 
 .icon-btn:active {
   transform: scale(0.94);
+}
+
+/* Плавающая круглая кнопка добавления фильма — можно перетащить долгим
+   нажатием; позиция держится только до обновления страницы. */
+.fab-btn {
+  position: fixed;
+  right: max(env(safe-area-inset-right), 20px);
+  bottom: max(env(safe-area-inset-bottom), 24px);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 28px;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(10, 132, 255, 0.35), 0 2px 6px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  z-index: 35;
+  touch-action: none;
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+
+.fab-btn[hidden] {
+  display: none;
+}
+
+.fab-btn:not([hidden]) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-btn:active {
+  transform: scale(0.94);
+}
+
+.fab-btn.dragging {
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.3);
+  transition: none;
 }
 
 .films-list {
@@ -397,10 +430,9 @@ body {
 .film-row-content {
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
-  padding: 12px 2px;
-  min-height: 66px;
+  padding: 14px 2px;
   background: var(--bg);
   transform: translateX(0);
   transition: transform 0.2s ease;
