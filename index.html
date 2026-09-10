@@ -20,25 +20,24 @@
 
   <div id="film-modal-overlay" class="overlay" hidden></div>
   <div id="film-modal" class="modal" hidden aria-hidden="true">
-    <h3 class="modal-title">New Movie</h3>
-
-    <label class="field-label" for="film-title-input">Title</label>
     <input
       id="film-title-input"
-      class="text-input"
+      class="text-input modal-title-input"
       type="text"
       autocomplete="off"
       autocorrect="off"
       autocapitalize="sentences"
       spellcheck="false"
+      placeholder="Title"
     />
 
-    <label class="field-label" for="film-date-input">Date</label>
-    <input id="film-date-input" class="text-input" type="date" />
+    <div class="modal-date-row">
+      <input id="film-date-input" class="modal-date-input" type="date" />
+    </div>
 
-    <div class="button-row">
-      <button id="film-save-btn" class="btn btn-primary" type="button">Save</button>
+    <div class="button-row modal-button-row">
       <button id="film-cancel-btn" class="btn btn-secondary" type="button">Cancel</button>
+      <button id="film-save-btn" class="btn btn-primary" type="button">Save</button>
     </div>
   </div>
 

@@ -497,19 +497,37 @@ function deleteFilm(id) {
 
 /* ---- Модальное окно добавления фильма ---- */
 
+const FILM_MODAL_ANIM_MS = 260;
+let filmModalCloseTimer = null;
+
 function openFilmModal() {
+  clearTimeout(filmModalCloseTimer);
+
   filmTitleInput.value = '';
-  filmDateInput.value = '';
+  filmDateInput.value = todayISO(); // сразу показываем текущую дату
+
   filmModalOverlay.hidden = false;
   filmModal.hidden = false;
   filmModal.setAttribute('aria-hidden', 'false');
+
+  // форсируем reflow, чтобы переход открытия точно проигрался
+  void filmModal.offsetWidth;
+
+  filmModalOverlay.classList.add('open');
+  filmModal.classList.add('open');
   filmTitleInput.focus();
 }
 
 function closeFilmModal() {
-  filmModalOverlay.hidden = true;
-  filmModal.hidden = true;
+  filmModalOverlay.classList.remove('open');
+  filmModal.classList.remove('open');
   filmModal.setAttribute('aria-hidden', 'true');
+
+  clearTimeout(filmModalCloseTimer);
+  filmModalCloseTimer = setTimeout(() => {
+    filmModalOverlay.hidden = true;
+    filmModal.hidden = true;
+  }, FILM_MODAL_ANIM_MS);
 }
 
 addFilmBtn.addEventListener('click', openFilmModal);

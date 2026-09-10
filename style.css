@@ -449,33 +449,87 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(86vw, 360px);
+  width: min(80vw, 300px);
   background: var(--bg);
   border: none;
-  border-radius: 14px;
-  padding: 20px;
+  border-radius: 20px;
+  padding: 18px 16px 16px;
   z-index: 51;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -46%) scale(0.9);
+  transition: opacity 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 #film-modal-overlay {
   z-index: 50;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-.modal-title {
-  margin: 0 0 16px;
+.modal-title-input {
+  margin-bottom: 12px;
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.modal-date-row {
+  display: flex;
+  justify-content: center;
+  margin: 2px 0 18px;
+}
+
+.modal-date-input {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid transparent;
+  background: var(--surface);
+  border-radius: 999px;
   color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  padding: 7px 18px;
+  min-height: auto;
+  width: auto;
+  max-width: 100%;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.modal .text-input {
-  margin-bottom: 16px;
+.modal-date-input:focus {
+  border-color: var(--accent);
 }
 
-.modal .button-row {
+.modal-date-input::-webkit-date-and-time-value {
+  text-align: center;
+}
+
+.modal .button-row.modal-button-row {
   margin-top: 4px;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.modal .button-row.modal-button-row .btn {
+  width: auto;
+  min-height: 32px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  margin-top: 0;
 }
 
 /* -------------------------------------------------------------------------
